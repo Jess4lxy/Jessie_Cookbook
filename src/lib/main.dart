@@ -20,8 +20,7 @@ class MyApp extends StatelessWidget {
         '/images': (context) => const ImagesScreen(),
         '/list': (context) => const ListScreen(),
         '/forms': (context) => const FormsScreen(),
-        '/navigation': (context) =>
-            const PlaceholderScreen('Navigation Section'),
+        '/navigation': (context) => const NavigationScreen(),
       },
     );
   }
@@ -793,6 +792,218 @@ Periodo: ${_periodoController.text}
                   ),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class NavigationScreen extends StatefulWidget {
+  const NavigationScreen({super.key});
+
+  @override
+  State<NavigationScreen> createState() => _NavigationScreenState();
+}
+
+class _NavigationScreenState extends State<NavigationScreen> {
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  // Implementación de la funcionalidad de la animación entre pantallas
+  Widget animateWidgetAcrossScreens() {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return const DetailScreen();
+        }));
+      },
+      child: Hero(
+        tag: 'imageHero', // Usamos el mismo tag en ambas pantallas para la transición
+        child: Center(
+          child: Image.network(
+            'https://i.kym-cdn.com/entries/icons/mobile/000/041/444/sdc.jpg',  // Imagen en la pantalla inicial
+            width: 150, // Tamaño de la imagen
+            height: 150,
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('List Section'),
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          },
+        ),
+      ),
+      body: Center(
+        child: _selectedIndex == 1
+            ? animateWidgetAcrossScreens()  // Llamada a la función de animación
+            : _selectedIndex == 2
+                ? null //_navigateToANewScreenAndBack()
+                : _selectedIndex == 3
+                    ? null //_navigateAndPassArgumentsbetweenRoutes()
+                    : _selectedIndex == 4
+                        ? null //_setupAppLinksAndroid()
+                        : _selectedIndex == 5
+                            ? null //_setupUniversalLinksIos()
+                            : _selectedIndex == 6
+                                ? null //_sendAndReturnDataFromScreenToNewScreen()
+                                : Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Text(
+                                        'Welcome to the Navigation Section!',
+                                        style: TextStyle(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 16),
+                                      const Text(
+                                        'Select any option from the Drawer.',
+                                        style: TextStyle(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+      ),
+      drawer: Drawer(
+        child: Column(
+          children: [
+            DrawerHeader(
+              decoration: const BoxDecoration(color: Colors.blue),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Drawer Header',
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back, color: Colors.white),
+                    onPressed: () {
+                      Navigator.pop(context); // Cierra el Drawer
+                      Navigator.popUntil(context, ModalRoute.withName('/')); // Cierra el Drawer
+                    },
+                    tooltip: 'Back to home',
+                  ),
+                ],
+              ),
+            ),
+            ListTile(
+              title: const Text('Welcome Navigation'),
+              selected: _selectedIndex == 0,
+              onTap: () {
+                _onItemTapped(0);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Animate a widget across screens'),
+              selected: _selectedIndex == 1,
+              onTap: () {
+                _onItemTapped(1);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Navigate to a new screen and back'),
+              selected: _selectedIndex == 2,
+              onTap: () {
+                _onItemTapped(2);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Navigate and pass arguments between named routes'),
+              selected: _selectedIndex == 3,
+              onTap: () {
+                _onItemTapped(3);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Set up app links for Android'),
+              selected: _selectedIndex == 4,
+              onTap: () {
+                _onItemTapped(4);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Set up universal links for iOS'),
+              selected: _selectedIndex == 5,
+              onTap: () {
+                _onItemTapped(5);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Send and return data from a screen to a new one'),
+              selected: _selectedIndex == 6,
+              onTap: () {
+                _onItemTapped(6);
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// Pantalla de detalle donde se recibe la animación
+class DetailScreen extends StatelessWidget {
+  const DetailScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Detail Screen'),
+      ),
+      body: GestureDetector(
+        onTap: () {
+          Navigator.pop(context); // Volver a la pantalla anterior
+        },
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Hero(
+                tag: 'imageHero', // Mismo tag para la transición
+                child: Image.network(
+                  'https://i.kym-cdn.com/entries/icons/mobile/000/041/444/sdc.jpg',  // Imagen que se anima
+                  width: 300, // Tamaño de la imagen
+                  height: 300,
+                ),
+              ),
+              const SizedBox(height: 10),  // Espaciado entre imagen y texto
+              const Text(
+                'womp womp',  // Texto debajo de la imagen
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ],
           ),
         ),
       ),
