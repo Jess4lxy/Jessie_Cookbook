@@ -34,7 +34,8 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Jessie Cookbook')),
-      body: ListView(
+      body: Center(
+        child: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
           ElevatedButton(
@@ -58,6 +59,7 @@ class HomeScreen extends StatelessWidget {
             child: const Text('Navigation'),
           ),
         ],
+      ),
       ),
     );
   }
