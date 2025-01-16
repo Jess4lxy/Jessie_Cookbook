@@ -421,6 +421,56 @@ class _ListScreenState extends State<ListScreen> {
     );
   }
 
+  Widget _buildWorkingLongLists() {
+    final items = List<String>.generate(10000, (i) => 'Item $i');
+
+    return ListView.builder(
+      itemCount: items.length,
+      prototypeItem: ListTile(
+        title: Text(items.first),
+      ),
+      itemBuilder: (context, index) {
+        return ListTile(
+          title: Text(items[index])
+        );
+      },
+    );
+  }
+
+Widget _buildCreateListWithSpacedItems() {
+  const items = 20;
+
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      return SingleChildScrollView(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: constraints.maxHeight),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: List.generate(
+              items,
+              (index) => _buildItemWidget('Item $index'),
+            ),
+          ),
+        ),
+      );
+    },
+  );
+}
+
+Widget _buildItemWidget(String text) {
+  return Card(
+    child: SizedBox(
+      height: 100,
+      child: Center(
+        child: Text(text),
+      ),
+    ),
+  );
+}
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -447,9 +497,9 @@ class _ListScreenState extends State<ListScreen> {
                     : _selectedIndex == 4
                         ? _buildUsingLists()
                         : _selectedIndex == 5
-                            ? null //_buildWorkingLongLists()
+                            ? _buildWorkingLongLists()
                             : _selectedIndex == 6
-                                ? null //_buildCreateListWithSpacedItems()
+                                ? _buildCreateListWithSpacedItems()
                                 : Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
