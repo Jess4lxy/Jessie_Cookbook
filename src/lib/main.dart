@@ -836,16 +836,73 @@ class _NavigationScreenState extends State<NavigationScreen> {
   }
 
   Widget _navigateToANewScreenAndBack() {
-  return ElevatedButton(
-    child: const Text('Open route'),
-    onPressed: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const SecondRoute()),
-      );
-    },
-  );
-}
+    return ElevatedButton(
+      child: const Text('Open route'),
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const SecondRoute()),
+        );
+      },
+    );
+  }
+
+  Widget _returnDataFromAScreen() {
+    return ElevatedButton(
+      onPressed: () {
+        _navigateAndReturnData(context);
+      },
+      child: const Text('Return some data!'),
+    );
+  }
+
+  Future<void> _navigateAndReturnData(BuildContext context) async {
+    // Lanza la pantalla que devuelve datos usando Navigator.push
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const DataReturnScreen()),
+    );
+
+    // Asegurarse de que el contexto esté montado antes de mostrar el resultado
+    if (!context.mounted) return;
+
+    // Mostrar el resultado con un SnackBar
+    ScaffoldMessenger.of(context)
+      ..removeCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text('Returned data: $result')));
+  }
+
+  Widget _sendDataToANewScreen() {
+    return ElevatedButton(
+      onPressed: () {
+        _navigateAndSendData(context);
+      },
+      child: const Text('Send Data to New Screen'),
+    );
+  }
+
+  Future<void> _navigateAndSendData(BuildContext context) async {
+    // Crear distintas opciones de datos
+    final options = [
+      Todo(title: 'Buy groceries', description: 'Milk, eggs, and bread'),
+      'This is a simple string data',
+      42,  // Un número
+    ];
+
+    // Selecciona una opción aleatoria de la lista
+    final selectedData = options[0];  // Cambia el índice para probar con diferentes datos
+
+    // Lanza la pantalla de destino y pasa el objeto seleccionado
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const NewScreen(),
+        settings: RouteSettings(
+          arguments: selectedData,  // Pasa el objeto seleccionado a la nueva pantalla
+        ),
+      ),
+    );
+  }
 
 
   @override
@@ -870,33 +927,29 @@ class _NavigationScreenState extends State<NavigationScreen> {
             : _selectedIndex == 2
                 ? _navigateToANewScreenAndBack()
                 : _selectedIndex == 3
-                    ? null //_navigateAndPassArgumentsbetweenRoutes()
+                    ? _returnDataFromAScreen()
                     : _selectedIndex == 4
-                        ? null //_setupAppLinksAndroid()
-                        : _selectedIndex == 5
-                            ? null //_setupUniversalLinksIos()
-                            : _selectedIndex == 6
-                                ? null //_sendAndReturnDataFromScreenToNewScreen()
-                                : Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Text(
-                                        'Welcome to the Navigation Section!',
-                                        style: TextStyle(
-                                          fontSize: 24,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 16),
-                                      const Text(
-                                        'Select any option from the Drawer.',
-                                        style: TextStyle(
-                                          fontSize: 24,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
+                        ? _sendDataToANewScreen()
+                            : Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Text(
+                                    'Welcome to the Navigation Section!',
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
+                                  const SizedBox(height: 16),
+                                  const Text(
+                                    'Select any option from the Drawer.',
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
       ),
       drawer: Drawer(
         child: Column(
@@ -946,7 +999,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
               },
             ),
             ListTile(
-              title: const Text('Navigate and pass arguments between named routes'),
+              title: const Text('Return data from a screen'),
               selected: _selectedIndex == 3,
               onTap: () {
                 _onItemTapped(3);
@@ -954,26 +1007,10 @@ class _NavigationScreenState extends State<NavigationScreen> {
               },
             ),
             ListTile(
-              title: const Text('Set up app links for Android'),
+              title: const Text('Send data to a new screen'),
               selected: _selectedIndex == 4,
               onTap: () {
                 _onItemTapped(4);
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: const Text('Set up universal links for iOS'),
-              selected: _selectedIndex == 5,
-              onTap: () {
-                _onItemTapped(5);
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: const Text('Send and return data from a screen to a new one'),
-              selected: _selectedIndex == 6,
-              onTap: () {
-                _onItemTapped(6);
                 Navigator.pop(context);
               },
             ),
@@ -1038,6 +1075,92 @@ class SecondRoute extends StatelessWidget {
             Navigator.pop(context);
           },
           child: const Text('Go back!'),
+        ),
+      ),
+    );
+  }
+}
+
+class DataReturnScreen extends StatelessWidget {
+  const DataReturnScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Return Data Screen'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: ElevatedButton(
+                onPressed: () {
+                  // Cierra la pantalla y devuelve "Success!" como resultado
+                  Navigator.pop(context, 'Success!');
+                },
+                child: const Text('Success!'),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: ElevatedButton(
+                onPressed: () {
+                  // Cierra la pantalla y devuelve "Failure." como resultado
+                  Navigator.pop(context, 'Failure.');
+                },
+                child: const Text('Failure.'),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class Todo {
+  final String title;
+  final String description;
+
+  Todo({
+    required this.title,
+    required this.description,
+  });
+}
+
+class NewScreen extends StatelessWidget {
+  const NewScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // Recupera el argumento que fue pasado al navegar
+    final dynamic data = ModalRoute.of(context)!.settings.arguments;
+
+    // Verifica qué tipo de datos fue recibido y maneja según el tipo
+    String displayText = '';
+
+    if (data is Todo) {
+      displayText = 'Title: ${data.title}\nDescription: ${data.description}';
+    } else if (data is String) {
+      displayText = 'String Data: $data';
+    } else if (data is int) {
+      displayText = 'Integer Data: $data';
+    } else {
+      displayText = 'Unknown Data';
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('New Screen'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Text(
+          displayText,
+          style: const TextStyle(fontSize: 22),
         ),
       ),
     );
