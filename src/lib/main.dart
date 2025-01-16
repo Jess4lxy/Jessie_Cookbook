@@ -815,7 +815,6 @@ class _NavigationScreenState extends State<NavigationScreen> {
     });
   }
 
-  // Implementación de la funcionalidad de la animación entre pantallas
   Widget _animateWidgetAcrossScreens() {
     return GestureDetector(
       onTap: () {
@@ -824,17 +823,30 @@ class _NavigationScreenState extends State<NavigationScreen> {
         }));
       },
       child: Hero(
-        tag: 'imageHero', // Usamos el mismo tag en ambas pantallas para la transición
+        tag: 'imageHero',
         child: Center(
           child: Image.network(
-            'https://i.kym-cdn.com/entries/icons/mobile/000/041/444/sdc.jpg',  // Imagen en la pantalla inicial
-            width: 150, // Tamaño de la imagen
+            'https://i.kym-cdn.com/entries/icons/mobile/000/041/444/sdc.jpg',
+            width: 150,
             height: 150,
           ),
         ),
       ),
     );
   }
+
+  Widget _navigateToANewScreenAndBack() {
+  return ElevatedButton(
+    child: const Text('Open route'),
+    onPressed: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const SecondRoute()),
+      );
+    },
+  );
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -856,7 +868,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
         child: _selectedIndex == 1
             ? _animateWidgetAcrossScreens()  // Llamada a la función de animación
             : _selectedIndex == 2
-                ? null //_navigateToANewScreenAndBack()
+                ? _navigateToANewScreenAndBack()
                 : _selectedIndex == 3
                     ? null //_navigateAndPassArgumentsbetweenRoutes()
                     : _selectedIndex == 4
@@ -1005,6 +1017,27 @@ class DetailScreen extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class SecondRoute extends StatelessWidget {
+  const SecondRoute({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Second Route'),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text('Go back!'),
         ),
       ),
     );
