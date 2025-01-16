@@ -353,7 +353,6 @@ class _ListScreenState extends State<ListScreen> {
     );
   }
 
-
   Widget _buildListWithDifferentItems() {
     return ListView.builder(
       itemCount: 10,
@@ -385,6 +384,23 @@ class _ListScreenState extends State<ListScreen> {
     );
   }
 
+  Widget _buildFloatingAppBarAboveList() {
+    return CustomScrollView(
+      slivers: [
+        const SliverAppBar(
+          floating: true,
+          flexibleSpace: Placeholder(),
+          expandedHeight: 200,
+        ),
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) => ListTile(title: Text('Item #$index')),
+            childCount: 50,
+          ),
+        )
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -406,52 +422,62 @@ class _ListScreenState extends State<ListScreen> {
         child: _selectedIndex == 1
             ? _buildHorizontalList()
             : _selectedIndex == 2
-              ? _buildListWithDifferentItems()
-              : Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Welcome to the List Section!',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 16), // Espaciado entre textos
-                    const Text(
-                      'Here you have an easy Grid List:',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 16), // Espaciado entre texto y GridView
-                    Expanded( // Expande el GridView para ocupar el espacio restante
-                      child: GridView.count(
-                        crossAxisCount: 2, // Número de columnas
-                        crossAxisSpacing: 8.0, // Espaciado horizontal entre celdas
-                        mainAxisSpacing: 8.0, // Espaciado vertical entre celdas
-                        padding: const EdgeInsets.all(8.0), // Padding alrededor del GridView
-                        children: List.generate(100, (index) {
-                          return Container(
-                            decoration: BoxDecoration(
-                              color: Colors.blueAccent,
-                              borderRadius: BorderRadius.circular(8.0),
+                ? _buildListWithDifferentItems()
+                : _selectedIndex == 3
+                    ? _buildFloatingAppBarAboveList()
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            'Welcome to the List Section!',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
                             ),
-                            child: Center(
-                              child: Text(
-                                'Item $index',
-                                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                      color: Colors.white,
+                          ),
+                          const SizedBox(height: 16), // Espaciado entre textos
+                          const Text(
+                            'Here you have an easy Grid List:',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(
+                              height: 16), // Espaciado entre texto y GridView
+                          Expanded(
+                            // Expande el GridView para ocupar el espacio restante
+                            child: GridView.count(
+                              crossAxisCount: 2, // Número de columnas
+                              crossAxisSpacing:
+                                  8.0, // Espaciado horizontal entre celdas
+                              mainAxisSpacing:
+                                  8.0, // Espaciado vertical entre celdas
+                              padding: const EdgeInsets.all(
+                                  8.0), // Padding alrededor del GridView
+                              children: List.generate(100, (index) {
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.blueAccent,
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      'Item $index',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headlineSmall
+                                          ?.copyWith(
+                                            color: Colors.white,
+                                          ),
                                     ),
-                              ),
+                                  ),
+                                );
+                              }),
                             ),
-                          );
-                        }),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
       ),
       drawer: Drawer(
         child: Column(
@@ -498,6 +524,14 @@ class _ListScreenState extends State<ListScreen> {
               selected: _selectedIndex == 2,
               onTap: () {
                 _onItemTapped(2);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('List With Floating App Bar'),
+              selected: _selectedIndex == 3,
+              onTap: () {
+                _onItemTapped(3);
                 Navigator.pop(context);
               },
             ),
