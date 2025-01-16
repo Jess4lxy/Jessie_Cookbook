@@ -816,7 +816,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
   }
 
   // Implementación de la funcionalidad de la animación entre pantallas
-  Widget animateWidgetAcrossScreens() {
+  Widget _animateWidgetAcrossScreens() {
     return GestureDetector(
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -854,7 +854,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
       ),
       body: Center(
         child: _selectedIndex == 1
-            ? animateWidgetAcrossScreens()  // Llamada a la función de animación
+            ? _animateWidgetAcrossScreens()  // Llamada a la función de animación
             : _selectedIndex == 2
                 ? null //_navigateToANewScreenAndBack()
                 : _selectedIndex == 3
