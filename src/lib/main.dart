@@ -20,8 +20,7 @@ class MyApp extends StatelessWidget {
         '/images': (context) => const ImagesScreen(),
         '/list': (context) => const ListScreen(),
         '/forms': (context) => const PlaceholderScreen('Forms Section'),
-        '/navigation': (context) =>
-            const PlaceholderScreen('Navigation Section'),
+        '/navigation': (context) => const PlaceholderScreen('Navigation Section'),
       },
     );
   }
