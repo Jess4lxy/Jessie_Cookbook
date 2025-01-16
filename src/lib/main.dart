@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => const HomeScreen(),
         '/design': (context) => const DesignScreen(),
         '/images': (context) => const ImagesScreen(),
-        '/list': (context) => const PlaceholderScreen('List Section'),
+        '/list': (context) => const ListScreen(),
         '/forms': (context) => const PlaceholderScreen('Forms Section'),
         '/navigation': (context) =>
             const PlaceholderScreen('Navigation Section'),
@@ -276,12 +276,12 @@ class _ImagesScreenState extends State<ImagesScreen> {
           builder: (context) {
             return IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.black),
-                    onPressed: () {
-                      Navigator.pop(context); // Cierra el Drawer
-                      Navigator.popUntil(context,
-                          ModalRoute.withName('/')); // Cierra el Drawer
-                    },
-                    tooltip: 'Back to home',
+              onPressed: () {
+                Navigator.pop(context); // Cierra el Drawer
+                Navigator.popUntil(
+                    context, ModalRoute.withName('/')); // Cierra el Drawer
+              },
+              tooltip: 'Back to home',
             );
           },
         ),
@@ -295,8 +295,212 @@ class _ImagesScreenState extends State<ImagesScreen> {
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             FadeInImage.memoryNetwork(
-              placeholder: kTransparentImage,
-              image:'https://i.kym-cdn.com/entries/icons/mobile/000/043/403/cover3.jpg'),
+                placeholder: kTransparentImage,
+                image:
+                    'https://i.kym-cdn.com/entries/icons/mobile/000/043/403/cover3.jpg'),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ListScreen extends StatefulWidget {
+  const ListScreen({super.key});
+
+  @override
+  State<ListScreen> createState() => _ListScreenState();
+}
+
+class _ListScreenState extends State<ListScreen> {
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  Widget _buildHorizontalList() {
+    return SizedBox(
+      height: 200, // Ajusta la altura según necesites
+      child: Scrollbar(
+        controller: ScrollController(), // Controlador para el scroll
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: 100, // Número de elementos en la lista
+          physics: const BouncingScrollPhysics(), // Física del desplazamiento
+          itemBuilder: (context, index) {
+            return Container(
+              width: 150, // Ancho de cada elemento
+              margin: const EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                color: Colors.blueAccent,
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: Center(
+                child: Text(
+                  'Item $index',
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        color: Colors.white,
+                      ),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+
+  Widget _buildListWithDifferentItems() {
+    return ListView.builder(
+      itemCount: 10,
+      itemBuilder: (context, index) {
+        if (index % 2 == 0) {
+          return ListTile(
+            leading: const Icon(Icons.person),
+            title: Text('Person $index'),
+            subtitle: const Text('This is a description'),
+            trailing: const Icon(Icons.arrow_forward),
+          );
+        } else {
+          return Container(
+            margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+            padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: Colors.blueAccent,
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            child: Center(
+              child: Text(
+                'Custom Widget $index',
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+          );
+        }
+      },
+    );
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('List Section'),
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          },
+        ),
+      ),
+      body: Center(
+        child: _selectedIndex == 1
+            ? _buildHorizontalList()
+            : _selectedIndex == 2
+              ? _buildListWithDifferentItems()
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Welcome to the List Section!',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 16), // Espaciado entre textos
+                    const Text(
+                      'Here you have an easy Grid List:',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 16), // Espaciado entre texto y GridView
+                    Expanded( // Expande el GridView para ocupar el espacio restante
+                      child: GridView.count(
+                        crossAxisCount: 2, // Número de columnas
+                        crossAxisSpacing: 8.0, // Espaciado horizontal entre celdas
+                        mainAxisSpacing: 8.0, // Espaciado vertical entre celdas
+                        padding: const EdgeInsets.all(8.0), // Padding alrededor del GridView
+                        children: List.generate(100, (index) {
+                          return Container(
+                            decoration: BoxDecoration(
+                              color: Colors.blueAccent,
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            child: Center(
+                              child: Text(
+                                'Item $index',
+                                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                      color: Colors.white,
+                                    ),
+                              ),
+                            ),
+                          );
+                        }),
+                      ),
+                    ),
+                  ],
+                ),
+      ),
+      drawer: Drawer(
+        child: Column(
+          children: [
+            DrawerHeader(
+              decoration: const BoxDecoration(color: Colors.blue),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Drawer Header',
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back, color: Colors.white),
+                    onPressed: () {
+                      Navigator.pop(context); // Cierra el Drawer
+                      Navigator.popUntil(context,
+                          ModalRoute.withName('/')); // Cierra el Drawer
+                    },
+                    tooltip: 'Back to home',
+                  ),
+                ],
+              ),
+            ),
+            ListTile(
+              title: const Text('Welcome Grid List'),
+              selected: _selectedIndex == 0,
+              onTap: () {
+                _onItemTapped(0);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Horizontal List'),
+              selected: _selectedIndex == 1,
+              onTap: () {
+                _onItemTapped(1);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('List With Different Items'),
+              selected: _selectedIndex == 2,
+              onTap: () {
+                _onItemTapped(2);
+                Navigator.pop(context);
+              },
+            ),
           ],
         ),
       ),
