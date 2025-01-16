@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 void main() => runApp(const MyApp());
 
@@ -16,10 +17,11 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const HomeScreen(),
         '/design': (context) => const DesignScreen(),
-        '/images': (context) => const PlaceholderScreen('Images Section'),
+        '/images': (context) => const ImagesScreen(),
         '/list': (context) => const PlaceholderScreen('List Section'),
         '/forms': (context) => const PlaceholderScreen('Forms Section'),
-        '/navigation': (context) => const PlaceholderScreen('Navigation Section'),
+        '/navigation': (context) =>
+            const PlaceholderScreen('Navigation Section'),
       },
     );
   }
@@ -164,7 +166,8 @@ class _DesignScreenState extends State<DesignScreen> {
                     children: [
                       const Text(
                         'Welcome to the Design Section!',
-                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold),
                       ),
                       ElevatedButton(
                         onPressed: () => _showSnackBar(context),
@@ -189,7 +192,8 @@ class _DesignScreenState extends State<DesignScreen> {
                     icon: const Icon(Icons.arrow_back, color: Colors.white),
                     onPressed: () {
                       Navigator.pop(context); // Cierra el Drawer
-                      Navigator.popUntil(context, ModalRoute.withName('/')); // Cierra el Drawer
+                      Navigator.popUntil(context,
+                          ModalRoute.withName('/')); // Cierra el Drawer
                     },
                     tooltip: 'Back to home',
                   ),
@@ -248,6 +252,51 @@ class PlaceholderScreen extends StatelessWidget {
               onPressed: () => Navigator.pop(context),
               child: const Text('Back to Home'),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ImagesScreen extends StatefulWidget {
+  const ImagesScreen({super.key});
+
+  @override
+  State<ImagesScreen> createState() => _ImagesScreenState();
+}
+
+class _ImagesScreenState extends State<ImagesScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Images Section'),
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.black),
+                    onPressed: () {
+                      Navigator.pop(context); // Cierra el Drawer
+                      Navigator.popUntil(context,
+                          ModalRoute.withName('/')); // Cierra el Drawer
+                    },
+                    tooltip: 'Back to home',
+            );
+          },
+        ),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              'Welcome to the Image Section!',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            FadeInImage.memoryNetwork(
+              placeholder: kTransparentImage,
+              image:'https://i.kym-cdn.com/entries/icons/mobile/000/043/403/cover3.jpg'),
           ],
         ),
       ),
