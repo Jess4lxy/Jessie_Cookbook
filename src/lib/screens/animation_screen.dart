@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
+import 'dart:math';
 
 class AnimationScreen extends StatefulWidget {
   const AnimationScreen({super.key});
@@ -12,6 +13,12 @@ class _AnimationScreenState extends State<AnimationScreen> {
   int _selectedIndex = 0;
   late String imageboing =
       'https://static.wikia.nocookie.net/nicos-nextbots/images/f/f8/Accurate_Boioioioioing.png/revision/latest?cb=20241218204653';
+
+  // properties for the container animation
+  double _width = 50;
+  double _height = 50;
+  Color _color = Colors.green;
+  BorderRadiusGeometry _borderRadius = BorderRadius.circular(8);
 
   void _onItemTapped(int index) {
     setState(() {
@@ -74,8 +81,17 @@ class _AnimationScreenState extends State<AnimationScreen> {
   }
 
   Widget _animateContainerProperties() {
-    return const Center(
-      child: Text('Container Properties Animation Placeholder'),
+    return Center(
+      child: AnimatedContainer(
+        width: _width,
+        height: _height,
+        decoration: BoxDecoration(
+          color: _color,
+          borderRadius: _borderRadius,
+        ),
+        duration: const Duration(seconds: 1),
+        curve: Curves.fastOutSlowIn,
+      ),
     );
   }
 
@@ -89,7 +105,7 @@ class _AnimationScreenState extends State<AnimationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('List Section'),
+        title: const Text('Animation Section'),
         leading: Builder(
           builder: (context) {
             return IconButton(
@@ -103,7 +119,7 @@ class _AnimationScreenState extends State<AnimationScreen> {
       ),
       body: Center(
         child: _selectedIndex == 1
-            ? _animatePageRouteTransition() // Llamada a la función de animación
+            ? _animatePageRouteTransition()
             : _selectedIndex == 2
                 ? _animateWidgetUsingPhysicsSimulation()
                 : _selectedIndex == 3
@@ -146,9 +162,8 @@ class _AnimationScreenState extends State<AnimationScreen> {
                   IconButton(
                     icon: const Icon(Icons.arrow_back, color: Colors.white),
                     onPressed: () {
-                      Navigator.pop(context); // Cierra el Drawer
-                      Navigator.popUntil(context,
-                          ModalRoute.withName('/')); // Cierra el Drawer
+                      Navigator.pop(context);
+                      Navigator.popUntil(context, ModalRoute.withName('/'));
                     },
                     tooltip: 'Back to home',
                   ),
