@@ -31,6 +31,18 @@ class HomeScreen extends StatelessWidget {
               onPressed: () => Navigator.pushNamed(context, '/navigation'),
               child: const Text('Navigation'),
             ),
+            ElevatedButton(
+              onPressed: () => Navigator.pushNamed(context, '/animation'),
+              child: const Text('Animation'),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.pushNamed(context, '/persistance'),
+              child: const Text('Persistance/Storage'),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.pushNamed(context, '/networking'),
+              child: const Text('Networking'),
+            ),
           ],
         ),
       ),

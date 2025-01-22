@@ -5,6 +5,7 @@ import 'screens/image_screen.dart';
 import 'screens/list_screen.dart';
 import 'screens/forms_screen.dart';
 import 'screens/navigation_screen.dart';
+import 'screens/animation_screen.dart';
 
 void main() => runApp(const MyApp());
 
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
         '/list': (context) => const ListScreen(),
         '/forms': (context) => const FormsScreen(),
         '/navigation': (context) => const NavigationScreen(),
+        '/animation': (context) => const AnimationScreen(),
       },
     );
   }
