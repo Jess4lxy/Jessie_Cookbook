@@ -142,12 +142,12 @@ class LongListState extends State<LongList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lista de Usuarios'),
+        title: const Text('Users List'),
       ),
       body: _users.isEmpty
           ? _isLoading
               ? const Center(child: CircularProgressIndicator())
-              : const Center(child: Text('No hay usuarios disponibles.'))
+              : const Center(child: Text('There is no users available.'))
           : ListView.builder(
               controller: _scrollController,
               itemCount: _users.length + (_isLoading ? 1 : 0),
