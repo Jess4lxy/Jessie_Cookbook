@@ -20,6 +20,9 @@ class _AnimationScreenState extends State<AnimationScreen> {
   Color _color = Colors.green;
   BorderRadiusGeometry _borderRadius = BorderRadius.circular(8);
 
+  // properties for the fade in and out animation
+  bool _visible = true;
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -81,23 +84,72 @@ class _AnimationScreenState extends State<AnimationScreen> {
   }
 
   Widget _animateContainerProperties() {
-    return Center(
-      child: AnimatedContainer(
-        width: _width,
-        height: _height,
-        decoration: BoxDecoration(
-          color: _color,
-          borderRadius: _borderRadius,
+  return Stack(
+    children: [
+      Center(
+        child: AnimatedContainer(
+          width: _width,
+          height: _height,
+          decoration: BoxDecoration(
+            color: _color,
+            borderRadius: _borderRadius,
+          ),
+          duration: const Duration(seconds: 1),
+          curve: Curves.fastOutSlowIn,
         ),
-        duration: const Duration(seconds: 1),
-        curve: Curves.fastOutSlowIn,
       ),
-    );
-  }
+      Positioned(
+        bottom: 16,
+        right: 16,
+        child: FloatingActionButton(
+          onPressed: () {
+            setState(() {
+              final random = Random();
+              _width = random.nextInt(300).toDouble();
+              _height = random.nextInt(300).toDouble();
+              _color = Color.fromRGBO(
+                random.nextInt(256),
+                random.nextInt(256),
+                random.nextInt(256),
+                1,
+              );
+              _borderRadius =
+                  BorderRadius.circular(random.nextInt(100).toDouble());
+            });
+          },
+          child: const Icon(Icons.refresh),
+        ),
+      ),
+    ],
+  );
+}
+
 
   Widget _fadeWidgetInOut() {
-    return const Center(
-      child: Text('Fade Animation Placeholder'),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        AnimatedOpacity(
+          // Controla si el widget es visible o no
+          opacity: _visible ? 1.0 : 0.0,
+          duration: const Duration(milliseconds: 500),
+          child: Container(
+            width: 200,
+            height: 200,
+            color: Colors.deepPurple,
+          ),
+        ),
+        const SizedBox(height: 16),
+        FloatingActionButton(
+          onPressed: () {
+            setState(() {
+              _visible = !_visible;
+            });
+          },
+          tooltip: 'Toggle Opacity',
+          child: const Icon(Icons.flip),
+        ),
+      ],
     );
   }
 
