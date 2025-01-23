@@ -6,6 +6,7 @@ import 'screens/list_screen.dart';
 import 'screens/forms_screen.dart';
 import 'screens/navigation_screen.dart';
 import 'screens/animation_screen.dart';
+import 'screens/persistance_storage_screen.dart';
 
 void main() => runApp(const MyApp());
 
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
         '/forms': (context) => const FormsScreen(),
         '/navigation': (context) => const NavigationScreen(),
         '/animation': (context) => const AnimationScreen(),
+        '/persistance': (context) => const PersistanceStorageScreen(),
       },
     );
   }

@@ -1,3 +1,4 @@
 {
-    "cmake.sourceDirectory": "C:/workCodes/UTMcodes/fluttercodes/Jessie_Cookbook/src/linux"
+    "cmake.sourceDirectory": "C:/workCodes/UTMcodes/fluttercodes/Jessie_Cookbook/src/linux",
+    "java.configuration.updateBuildConfiguration": "interactive"
 }
