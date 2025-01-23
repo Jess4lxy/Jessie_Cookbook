@@ -37,7 +37,6 @@ class ApiService {
       _authToken = response.data['token'];
       _dio.options.headers['Authorization'] = "Bearer $_authToken";
     } on DioException catch (e) {
-      // Replace print statements with logger
       if (e.type == DioExceptionType.connectionError) {
         _logger.e("Error de conexión: No se pudo establecer conexión");
       } else if (e.type == DioExceptionType.sendTimeout) {
@@ -65,7 +64,7 @@ class ApiService {
       final response = await _dio.get(
         "/users",
         queryParameters: {
-          'page': page, // Ahora puedes pasar la página como un parámetro
+          'page': page,
           'limit': limit,
         },
       );
@@ -100,5 +99,133 @@ class ApiService {
     }
 
     return allUsers;
+  }
+
+  // Método para agregar un nuevo usuario
+  Future<void> addUser({
+    required String name,
+    required String userName,
+    required String password,
+    required String foto,
+    required String verificado,
+  }) async {
+    if (_authToken == null) {
+      throw Exception("No has iniciado sesión");
+    }
+
+    try {
+      final response = await _dio.post(
+        "/users",
+        data: {
+          "name": name,
+          "user_name": userName,
+          "password": password,
+          "foto": foto,
+          "verificado": verificado,
+        },
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': "Bearer $_authToken",
+          },
+        ),
+      );
+
+      _logger.d("Usuario agregado: ${response.data}");
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionError) {
+        _logger.e("Error de conexión: No se pudo establecer conexión");
+      } else if (e.type == DioExceptionType.sendTimeout) {
+        _logger.e("Error de tiempo de envío: Tiempo de espera agotado");
+      } else if (e.type == DioExceptionType.receiveTimeout) {
+        _logger.e("Error de tiempo de recepción: Tiempo de espera agotado");
+      } else if (e.type == DioExceptionType.cancel) {
+        _logger.e("Error de solicitud cancelada");
+      } else {
+        _logger.e("Error inesperado: $e");
+      }
+      throw Exception("Error al agregar usuario: $e");
+    }
+  }
+
+  // Método para editar un usuario
+  Future<void> editUser({
+    required String userId,
+    required String name,
+    required String userName,
+    required String password,
+    required String foto,
+    required String verificado,
+  }) async {
+    if (_authToken == null) {
+      throw Exception("No has iniciado sesión");
+    }
+
+    try {
+      final response = await _dio.put(
+        "/users/$userId",  // URL dinámica para editar un usuario por ID
+        data: {
+          "name": name,
+          "user_name": userName,
+          "password": password,
+          "foto": foto,
+          "verificado": verificado,
+        },
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': "Bearer $_authToken",
+          },
+        ),
+      );
+
+      _logger.d("Usuario editado: ${response.data}");
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionError) {
+        _logger.e("Error de conexión: No se pudo establecer conexión");
+      } else if (e.type == DioExceptionType.sendTimeout) {
+        _logger.e("Error de tiempo de envío: Tiempo de espera agotado");
+      } else if (e.type == DioExceptionType.receiveTimeout) {
+        _logger.e("Error de tiempo de recepción: Tiempo de espera agotado");
+      } else if (e.type == DioExceptionType.cancel) {
+        _logger.e("Error de solicitud cancelada");
+      } else {
+        _logger.e("Error inesperado: $e");
+      }
+      throw Exception("Error al editar usuario: $e");
+    }
+  }
+
+  // Método para eliminar un usuario
+  Future<void> deleteUser(String userId) async {
+    if (_authToken == null) {
+      throw Exception("No has iniciado sesión");
+    }
+
+    try {
+      final response = await _dio.delete(
+        "/users/$userId",  // URL dinámica para eliminar un usuario por ID
+        options: Options(
+          headers: {
+            'Authorization': "Bearer $_authToken",
+          },
+        ),
+      );
+
+      _logger.d("Usuario eliminado: ${response.data}");
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionError) {
+        _logger.e("Error de conexión: No se pudo establecer conexión");
+      } else if (e.type == DioExceptionType.sendTimeout) {
+        _logger.e("Error de tiempo de envío: Tiempo de espera agotado");
+      } else if (e.type == DioExceptionType.receiveTimeout) {
+        _logger.e("Error de tiempo de recepción: Tiempo de espera agotado");
+      } else if (e.type == DioExceptionType.cancel) {
+        _logger.e("Error de solicitud cancelada");
+      } else {
+        _logger.e("Error inesperado: $e");
+      }
+      throw Exception("Error al eliminar usuario: $e");
+    }
   }
 }
